@@ -1,37 +1,45 @@
-class Sentinel:
-    def __init__(self, prev, next):
-        self.prev = prev
-        self.next = next
-    def __len__(self):
-        return 0
-    def __getitem__(self, i):
-        raise IndexError("Index out of bounds")
-    def __str__(self):
-        return ""
-    def __repr__(self):
-        return "Sentinel()"
-
-class LinkedList:
+class ListNode:
     def __init__(self, item, prev, next):
-        assert type(next) == LinkedList or type(next) == Sentinel, "Next must be a LinkedList"
-        assert type(prev) == LinkedList or type(prev) == Sentinel, "Prev must be a LinkedList"
         self.item = item
         self.prev = prev
         self.next = next
 
+    def __repr__(self):
+        return repr(self.item)
+
+class LinkedList:
+    def __init__(self, head, tail):
+        self.head = head
+        self.tail = tail
+
     # Sequence protocol
     def __len__(self):
-        return 1 + len(self.next)
+        if not head:
+            return 0
+        curr, total = self.head, 1
+        while curr is not self.tail:
+            total += 1
+            curr = curr.next
+        return total
+
     def __getitem__(self, i):
-        if i == 0:
-            return self.item
-        return self.next[i - 1]
+        curr = self.head
+        while curr:
+            if i == 0:
+                return curr
+            curr, i = curr.next, i - 1
+        raise IndexError("Index out of range")
 
     # String representation protocol
     def __repr__(self):
-        return "LinkedList(" + repr(self.item) + ", "  + repr(self.next) + ")"
+        if not self.head:
+            return ''
+
     def __str__(self):
-        return str(self.item) + "-> " + str(self.next)
+        string = ''
+        for el in self:
+            string += "-> " + el
+        return string
 
     # Equality testing
     def __eq__(self, other):
@@ -49,7 +57,6 @@ class LinkedList:
         linked_lst = Sentinel(None, None)
         for elem in lst:
             new_node = LinkedList(elem, linked_lst.prev, linked_lst)
-            print(new_node)
             if not linked_lst.next:
                 linked_lst.next = new_node
             else:
