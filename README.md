@@ -1,4 +1,4 @@
 assassins
 =========
 
-Code to facilitate an assassins game.
+This repository contains code to facilitate an assassins game.
